@@ -2,29 +2,37 @@
 #include <unistd.h>
 #include "library.h"
 
-unsigned char i;
-
-
-const unsigned char Bin2LCD[] ={"123456789*0#"};
-
-int main(int args,char* argv[])
+const int M = 4;
+const int N = 4;
+const int full_seq_drive[M][N] = { 
+                   
+				             {1,1,0,0},
+                                             {0,1,1,0},
+		                             {0,0,1,1},
+		                             {1,0,0,1},
+		                         };
+								 
+int main(int args, char *argv[])
 {
-     CM3DeviceInit();
+
+      CM3DeviceInit();
+	  CM3PortInit(3);
+	  
+
+printf("starting_stepper_motor\n");
+
 while(1)
- {	 
-	CM3PortInit(KbdPort);
-    i = CM3PortRead(KbdPort);
-	 
-    if(i!= 0xff)
-    {
-    CM3PortInit(LCDPort);
-   	printf("lcd display on\n");
+{ 
+           
+		   
+		   CM3WRITEPortArray(full_seq_drive);
+ 		
+			usleep(1000);              //non blocking sleep
 
-    position_set_lcd(1);    //positon
-
-    CM3PortWrite(LCDPort,Bin2LCD[i]);	
-   
-    }
- } 
 }
-    CM3DeviceDeInit();
+                      
+}
+ 
+CM3DeviceDeInit();
+
+}  
